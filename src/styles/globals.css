@@ -1,0 +1,278 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* ─── Atlas library chrome tokens (Tailwind-consumable) ───
+     Every surface, line and overlay in the vault resolves through one of
+     these, so the .dark block below is the single place the theme flips. */
+  --color-atlas-chrome: var(--atlas-chrome);
+  --color-atlas-surface: var(--atlas-surface);
+  --color-atlas-elevated: var(--atlas-elevated);
+  --color-atlas-elevated-hover: var(--atlas-elevated-hover);
+  --color-atlas-popover: var(--atlas-popover);
+  --color-atlas-scrim: var(--atlas-scrim);
+  --color-atlas-line: var(--atlas-line);
+  --color-atlas-line-soft: var(--atlas-line-soft);
+  --color-atlas-line-strong: var(--atlas-line-strong);
+  --color-atlas-hover: var(--atlas-hover);
+  --color-atlas-active: var(--atlas-active);
+  --color-atlas-overlay: var(--atlas-overlay);
+  --color-atlas-ink: var(--atlas-ink);
+  --color-atlas-ink-2: var(--atlas-ink-2);
+  --color-atlas-ink-3: var(--atlas-ink-3);
+  --color-atlas-ink-4: var(--atlas-ink-4);
+  --color-atlas-ink-5: var(--atlas-ink-5);
+  --color-atlas-ink-faint: var(--atlas-ink-faint);
+  --color-atlas-accent: var(--atlas-accent);
+  --color-atlas-accent-hover: var(--atlas-accent-hover);
+  --color-atlas-accent-fg: var(--atlas-accent-fg);
+  --color-atlas-online: var(--atlas-online);
+
+  --shadow-atlas-pop: var(--atlas-shadow-pop);
+  --shadow-atlas-card: var(--atlas-shadow-card);
+  /* Named "glow" rather than "accent" so it cannot collide with the
+     --color-atlas-accent token when Tailwind resolves `shadow-atlas-*`. */
+  --shadow-atlas-glow: var(--atlas-shadow-glow);
+
+  /* Decelerating curve shared by every reveal in the vault — fast to start,
+     settling gently. Exposed as `ease-atlas` for one-off transitions too. */
+  --ease-atlas: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-chip-in: chipIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-chip-out: chipOut 0.14s ease-in forwards;
+  --animate-pop-in: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-overlay-in: overlayIn 0.16s ease;
+  --animate-btn-in: btnIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes chipIn {
+    from {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes chipOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+  }
+  /* Anchored to its top-right origin, the menu scales up and drops a few px so
+     it reads as unfolding from the button rather than fading in place. */
+  @keyframes popIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes overlayIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes btnIn {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ─── Light (default) ─── */
+:root {
+  color-scheme: light;
+
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* Atlas — macOS vault aesthetic from the design spec */
+  --atlas-chrome: #f6f6f7;
+  --atlas-surface: #ffffff;
+  --atlas-elevated: #ffffff;
+  --atlas-elevated-hover: #fafafa;
+  --atlas-popover: #fcfcfd;
+  --atlas-scrim: rgb(250 250 251 / 0.52);
+  --atlas-line: rgb(0 0 0 / 0.1);
+  --atlas-line-soft: rgb(0 0 0 / 0.07);
+  --atlas-line-strong: rgb(0 0 0 / 0.34);
+  --atlas-hover: rgb(0 0 0 / 0.05);
+  --atlas-active: rgb(0 0 0 / 0.065);
+  --atlas-overlay: rgb(0 0 0 / 0.1);
+  --atlas-ink: #1d1d1f;
+  --atlas-ink-2: #3a3a3c;
+  --atlas-ink-3: #6e6e73;
+  --atlas-ink-4: #8a8a8f;
+  --atlas-ink-5: #a1a1a6;
+  --atlas-ink-faint: #b0b0b5;
+  --atlas-accent: #3b6fd4;
+  --atlas-accent-hover: #2f5cb4;
+  --atlas-accent-fg: #ffffff;
+  --atlas-online: #28c840;
+
+  --atlas-shadow-pop: 0 12px 30px -8px rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.1);
+  --atlas-shadow-card: 0 1px 2px rgb(0 0 0 / 0.04);
+  --atlas-shadow-glow: 0 2px 6px rgb(59 111 212 / 0.3);
+}
+
+/* ─── Dark ─── */
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.15);
+  --ring: oklch(0.556 0 0);
+
+  /* Atlas — dark vault. Chrome sits *below* the content surface so the
+     sidebar recedes, mirroring how macOS treats sidebars in dark mode. */
+  --atlas-chrome: #161618;
+  --atlas-surface: #1c1c1e;
+  --atlas-elevated: #242427;
+  --atlas-elevated-hover: #2c2c30;
+  --atlas-popover: #2c2c30;
+  --atlas-scrim: rgb(28 28 30 / 0.6);
+  --atlas-line: rgb(255 255 255 / 0.12);
+  --atlas-line-soft: rgb(255 255 255 / 0.08);
+  --atlas-line-strong: rgb(255 255 255 / 0.32);
+  --atlas-hover: rgb(255 255 255 / 0.06);
+  --atlas-active: rgb(255 255 255 / 0.1);
+  --atlas-overlay: rgb(255 255 255 / 0.16);
+  --atlas-ink: #f5f5f7;
+  --atlas-ink-2: #d1d1d6;
+  --atlas-ink-3: #a1a1a6;
+  --atlas-ink-4: #8a8a8f;
+  --atlas-ink-5: #6e6e73;
+  --atlas-ink-faint: #5a5a5f;
+  --atlas-accent: #5b8def;
+  --atlas-accent-hover: #6f9cf2;
+  --atlas-accent-fg: #0f1729;
+  --atlas-online: #32d74b;
+
+  --atlas-shadow-pop: 0 12px 30px -8px rgb(0 0 0 / 0.6), 0 1px 3px rgb(0 0 0 / 0.4);
+  --atlas-shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --atlas-shadow-glow: 0 2px 6px rgb(91 141 239 / 0.35);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    @apply bg-atlas-surface text-atlas-ink;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, sans-serif;
+  }
+
+  /* Honour the OS "reduce motion" setting — reveals still happen, just
+     without the travel. Durations are near-zero rather than zero so
+     animationend/transitionend listeners still fire. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--atlas-line-strong);
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
