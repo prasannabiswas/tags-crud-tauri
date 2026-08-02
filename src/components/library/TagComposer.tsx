@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { TAG_PALETTE } from '@/data/library';
 import { useLibrary } from '@/context/LibraryContext';
-import { useTheme } from '@/context/ThemeContext';
 import { cn } from '@/lib/utils';
+import { TAG_COLORS } from '@/types/library';
 
 /**
  * TagComposer
@@ -14,8 +13,7 @@ import { cn } from '@/lib/utils';
  * input and commit the tag out from under the click.
  */
 export const TagComposer = () => {
-  const { createTag, cancelCompose, nextColor } = useLibrary();
-  const { resolvedTheme } = useTheme();
+  const { createTag, cancelCompose, nextColor, swatchForColor } = useLibrary();
   const [draft, setDraft] = useState('');
   const [color, setColor] = useState(() => nextColor());
   const inputRef = useRef<HTMLInputElement>(null);
@@ -29,7 +27,7 @@ export const TagComposer = () => {
       cancelCompose();
       return;
     }
-    createTag(draft, color);
+    void createTag(draft, color);
   };
 
   return (
@@ -37,9 +35,7 @@ export const TagComposer = () => {
       <div className="flex items-center gap-2">
         <span
           className="size-2 flex-none rounded-full transition-colors duration-150"
-          style={{
-            backgroundColor: TAG_PALETTE[color % TAG_PALETTE.length][resolvedTheme].dot,
-          }}
+          style={{ backgroundColor: swatchForColor(color).dot }}
         />
         <input
           ref={inputRef}
@@ -56,18 +52,19 @@ export const TagComposer = () => {
       </div>
 
       <div className="flex items-center gap-1.5 pl-4">
-        {TAG_PALETTE.map((entry, index) => {
-          const swatch = entry[resolvedTheme];
-          const selected = color === index;
+        {TAG_COLORS.map((key) => {
+          const swatch = swatchForColor(key);
+          const selected = color === key;
 
           return (
             <button
-              key={entry.light.dot}
+              key={key}
               type="button"
-              title="Tag color"
+              title={`Tag colour: ${key}`}
+              aria-label={`Tag colour: ${key}`}
               onMouseDown={(event) => {
                 event.preventDefault();
-                setColor(index);
+                setColor(key);
               }}
               className={cn(
                 'size-[14px] cursor-pointer rounded-full border-[1.5px] p-0 transition-[box-shadow,border-color] duration-150',

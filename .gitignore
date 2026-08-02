@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# Environment — .env.example is the checked-in template
+.env
+.env.*
+!.env.example
+
+# Local SQLite databases (only when ATLAS_DB_PATH points inside the repo;
+# the real one lives in the OS app-data directory)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -12,11 +12,28 @@ import { LibraryToolbar } from './LibraryToolbar';
  * is dropped here because the OS window already provides it.
  */
 export const LibraryWindow = () => {
-  const { openMenuId, closeMenus } = useLibrary();
+  const { openMenuId, closeMenus, error, dismissError } = useLibrary();
 
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-atlas-surface text-atlas-ink">
       <LibraryToolbar />
+
+      {/* A failed write has already been rolled back in the cache by the time
+          this shows — the banner explains why the change reverted. */}
+      {error && (
+        <div className="flex flex-none items-center gap-3 border-b border-atlas-line-soft bg-destructive/10 px-6 py-2 text-[12.5px] text-atlas-ink">
+          <span className="font-medium">Could not save</span>
+          <span className="min-w-0 flex-1 truncate text-atlas-ink-3">{error}</span>
+          <button
+            type="button"
+            onClick={dismissError}
+            aria-label="Dismiss error"
+            className="flex size-[18px] flex-none cursor-pointer items-center justify-center rounded-full bg-atlas-overlay text-[11px] leading-none"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       <div className="flex min-h-0 flex-1">
         <LibrarySidebar />

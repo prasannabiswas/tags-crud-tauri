@@ -37,7 +37,7 @@ export const AssetCard = ({ item }: AssetCardProps) => {
     (tagId: string) => {
       setRemovingTagId(tagId);
       exitTimer.current = setTimeout(() => {
-        toggleAssetTag(item.id, tagId);
+        void toggleAssetTag(item.id, tagId);
         setRemovingTagId(null);
       }, CHIP_EXIT_MS);
     },

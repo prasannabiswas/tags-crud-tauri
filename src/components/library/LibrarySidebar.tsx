@@ -20,6 +20,8 @@ export const LibrarySidebar = () => {
     swatchFor,
     composing,
     startNewTag,
+    removeTag,
+    status,
   } = useLibrary();
 
   const filterActive = selectedTagId !== null;
@@ -72,39 +74,57 @@ export const LibrarySidebar = () => {
         </button>
       </div>
 
-      {/* Tag rows */}
+      {/* Tag rows. The row and its delete control are siblings rather than
+          nested, since a button inside a button is invalid markup. */}
       {tags.map((tag) => {
         const swatch = swatchFor(tag.id);
         const active = selectedTagId === tag.id;
 
         return (
-          <button
-            key={tag.id}
-            type="button"
-            onClick={() => selectTag(tag.id)}
-            className={cn(
-              'flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors duration-150 hover:bg-atlas-hover',
-              active ? 'font-semibold' : 'font-normal text-atlas-ink-2'
-            )}
-            style={active ? { backgroundColor: swatch.bg, color: swatch.fg } : undefined}
-          >
-            <span
-              className="size-2 flex-none rounded-full"
-              style={{ backgroundColor: swatch.dot }}
-            />
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap">{tag.name}</span>
-            <span
-              className={cn('ml-auto text-[11.5px] tabular-nums', !active && 'text-atlas-ink-5')}
-              style={active ? { color: swatch.fg } : undefined}
+          <div key={tag.id} className="group/tag relative flex items-center">
+            <button
+              type="button"
+              onClick={() => selectTag(tag.id)}
+              className={cn(
+                'flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] transition-colors duration-150 hover:bg-atlas-hover',
+                active ? 'font-semibold' : 'font-normal text-atlas-ink-2'
+              )}
+              style={active ? { backgroundColor: swatch.bg, color: swatch.fg } : undefined}
             >
-              {counts[tag.id]}
-            </span>
-          </button>
+              <span
+                className="size-2 flex-none rounded-full"
+                style={{ backgroundColor: swatch.dot }}
+              />
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap">{tag.name}</span>
+              <span
+                className={cn(
+                  'ml-auto text-[11.5px] tabular-nums transition-opacity duration-150 group-hover/tag:opacity-0',
+                  !active && 'text-atlas-ink-5'
+                )}
+                style={active ? { color: swatch.fg } : undefined}
+              >
+                {counts[tag.id]}
+              </span>
+            </button>
+
+            {/* Overlays the count on hover. Deleting cascades in SQLite, so the
+                tag's assignments go with it. */}
+            <button
+              type="button"
+              title={`Delete “${tag.name}” and remove it from all assets`}
+              aria-label={`Delete tag ${tag.name}`}
+              onClick={() => void removeTag(tag.id)}
+              className="absolute right-1.5 flex size-[15px] cursor-pointer items-center justify-center rounded-full bg-atlas-overlay text-[11px] leading-none text-atlas-ink-2 opacity-0 transition-opacity duration-150 ease-atlas group-hover/tag:opacity-100 focus-visible:opacity-100"
+            >
+              ×
+            </button>
+          </div>
         );
       })}
 
-      {/* First-run empty state */}
-      {tags.length === 0 && (
+      {/* First-run empty state — only once hydration has actually finished, so
+          it does not flash while the database is still being read. */}
+      {status === 'ready' && tags.length === 0 && (
         <div className="mx-1 mt-1.5 rounded-lg border border-dashed border-atlas-line bg-atlas-hover px-3 py-3.5">
           <TagIcon className="mx-auto mb-[9px] block size-[22px] stroke-[1.6] text-atlas-ink-faint" />
           <div className="mb-[3px] text-center text-[12.5px] font-semibold text-atlas-ink-2">

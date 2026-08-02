@@ -24,7 +24,7 @@ export const AssignTagsMenu = ({ assetId, assignedTagIds }: AssignTagsMenuProps)
         <button
           key={tag.id}
           type="button"
-          onClick={() => toggleAssetTag(assetId, tag.id)}
+          onClick={() => void toggleAssetTag(assetId, tag.id)}
           className="flex w-full cursor-pointer items-center gap-2 rounded-[5px] border-none bg-transparent px-2 py-[5px] text-left text-[13px] text-atlas-ink transition-colors duration-150 hover:bg-atlas-hover"
         >
           <span className="w-[13px] text-xs text-atlas-accent">

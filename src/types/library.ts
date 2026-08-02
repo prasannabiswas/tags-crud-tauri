@@ -2,6 +2,15 @@
 /*                              Library domain types                          */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Stable palette keys. Persisted verbatim in `tags.color`, so these strings are
+ * part of the on-disk format — renaming one orphans every tag already stored
+ * under the old key. Add new keys freely; do not repurpose existing ones.
+ */
+export const TAG_COLORS = ['blue', 'green', 'amber', 'purple', 'pink', 'teal', 'grey'] as const;
+
+export type TagColor = (typeof TAG_COLORS)[number];
+
 /** A resolved tag colour — dot, chip background and chip foreground. */
 export interface TagSwatch {
   dot: string;
@@ -19,12 +28,32 @@ export interface TagPaletteEntry {
   dark: TagSwatch;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                         Persisted records (see db.rs)                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Mirrors the `Tag` struct in src-tauri/src/db.rs and the `tags` table.
+ *
+ * `color` is a `TagColor` key rather than a palette index: an index would
+ * silently repoint at a different colour if the palette were reordered, and
+ * would not survive a tag being deleted and recreated.
+ */
 export interface Tag {
   id: string;
   name: string;
-  /** Index into the tag palette; wrapped modulo palette length when resolved. */
-  color: number;
+  color: TagColor;
 }
+
+/** Mirrors the `Assignment` struct in db.rs and one row of `item_tags`. */
+export interface Assignment {
+  item_id: number;
+  tag_id: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            Frontend-only records                           */
+/* -------------------------------------------------------------------------- */
 
 export interface Asset {
   id: number;
@@ -50,6 +79,3 @@ export interface LibraryItem extends Asset, TaggedItem {
   id: number;
   tags: string[];
 }
-
-/** Map of asset id → assigned tag ids. */
-export type TagAssignments = Record<number, string[]>;

@@ -10,7 +10,24 @@ import { AssetCard } from './AssetCard';
  * state when the active tag has nothing assigned to it.
  */
 export const AssetGrid = () => {
-  const { filtered, selectedTag, clearFilter } = useLibrary();
+  const { filtered, selectedTag, clearFilter, status } = useLibrary();
+
+  // Skeletons rather than an empty grid: assets are static, only their tags
+  // are being read from the database, so the layout is already known.
+  if (status === 'loading') {
+    return (
+      <div className="flex-1 overflow-y-auto px-6 pb-8 pt-5">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(196px,1fr))] gap-[18px]">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-[168px] animate-pulse rounded-[10px] border border-atlas-line bg-atlas-hover"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (filtered.length === 0) {
     return (
